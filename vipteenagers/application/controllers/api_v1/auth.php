@@ -5,6 +5,7 @@ class auth extends CI_Controller {
     parent::__construct();
     $this->load->helper('url');
     $this->load->model('apimodel');
+    $this->load->model('errorhandler');
     $this->load->helper('form','url');
     $this->load->library('form_validation');
  
@@ -27,59 +28,72 @@ class auth extends CI_Controller {
   }
 
   public function login($page = 'login'){
-
-    $this->form_validation->set_rules('email', 'Email', 'required|min_length[3]|valid_email');
-    $this->form_validation->set_rules('password', 'Password', 'required|min_length[3]');
-
-    if ($this->form_validation->run() == FALSE)
-    {
+     
       $this->load->view($page);
-    }else{
-      $email = $this->input->post('email');
-      $pass = $this->input->post('password');
-      $data = $this->apimodel->login_api($email,$pass);
-      if($data){
-        $UserID = $data['UserID'];
-        $Email = $data['Email'];
-        $Phone = $data['Phone'];
-        $User_type = $data['User_type'];
-        $Icon = $data['Icon'];
-        $Last_name = $data['Last_name'];
-        $First_name = $data['First_name'];
-        $Age = $data['Age'];
-        $WeChat_ID = $data['WeChat_ID'];
-        $Registration_date = $data['Registration_date'];
-        $Date_of_Birth = $data['Date_of_Birth'];
-        $Gender = $data['Gender'];
-
-        $sesdata = array(
-                         'UserID' => $UserID,
-                         'Email' => $Email,
-                         'Phone' => $Phone,
-                         'User_type' => $User_type,
-                         'Icon' => $Icon,
-                         'Last_name' => $Last_name,
-                         'First_name' => $First_name,
-                         'Age' => $Age,
-                         'WeChat_ID' => $WeChat_ID,
-                         'Registration_date' => $Registration_date,
-                         'Date_of_Birth' => $Date_of_Birth,
-                         'Gender' => $Gender,
-                         'logged_in' => TRUE
-                         );
-        $this->session->set_userdata($sesdata);
-        //echo $this->session->userdata('Email');
-        //echo $this->session->userdata('Phone');
-        //echo $this->session->userdata('UserID');
-        //echo '<pre>'.json_encode($data).'</pre>';
-        //redirect('api_v1/auth/dashboard');
-    } else{
-      echo "<script>alert('Email or Password is not correct');</script>";
-    }
-
-    } 
-
   }
+    
+    public function logingo($page = 'login'){
+    
+        $this->form_validation->set_rules('email', 'Email', 'required|min_length[3]|valid_email');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[3]');
+        if ($this->form_validation->run() == FALSE)
+            {
+             //   $this->load->view('response');
+                $this->errorhandler->errorhandler("40002");
+               // $this->load->view($page);
+               // echo "Invalid form: Email or password!";
+            }else{
+              $email = $this->input->post('email');
+              $pass = $this->input->post('password');
+              $data = $this->apimodel->login_api($email,$pass);
+              if($data){
+                $UserID = $data['UserID'];
+                $Email = $data['Email'];
+                $Phone = $data['Phone'];
+                $User_type = $data['User_type'];
+                $Icon = $data['Icon'];
+                $Last_name = $data['Last_name'];
+                $First_name = $data['First_name'];
+                $Age = $data['Age'];
+                $WeChat_ID = $data['WeChat_ID'];
+                $Registration_date = $data['Registration_date'];
+                $Date_of_Birth = $data['Date_of_Birth'];
+                $Gender = $data['Gender'];
+        
+                $sesdata = array(
+                                 'UserID' => $UserID,
+                                 'Email' => $Email,
+                                 'Phone' => $Phone,
+                                 'User_type' => $User_type,
+                                 'Icon' => $Icon,
+                                 'Last_name' => $Last_name,
+                                 'First_name' => $First_name,
+                                 'Age' => $Age,
+                                 'WeChat_ID' => $WeChat_ID,
+                                 'Registration_date' => $Registration_date,
+                                 'Date_of_Birth' => $Date_of_Birth,
+                                 'Gender' => $Gender,
+                                 'logged_in' => TRUE
+                                 );
+                $this->session->set_userdata($sesdata);
+                  $this->load->view('response');// add argument.
+                  echo $this->session->userdata('Email');
+                  echo $this->session->userdata('Phone');
+                  echo $this->session->userdata('UserID');
+                  echo '<pre>'.json_encode($data).'</pre>';
+            } else{
+              //echo "<script>alert('Email or Password is not correct');</script>";
+                //$this->load->view('response');
+                $this->errorhandler->errorhandler("40005");
+            }
+        
+            }
+    }
+//
+//
+//
+
+  
 
   public function dashboard($page = 'dashboard'){
     $this->load->view($page);
@@ -88,7 +102,9 @@ class auth extends CI_Controller {
   public function logout()
     {
         $this->session->sess_destroy();
-        echo "<script>alert('Logout Successful');</script>";
+        //echo "<script>alert('Logout Successful');</script>";
+        $this->load->view('response');
+        $this->errorhandler->errorhandler("200");
        // redirect('users/login');
     }
 
@@ -118,10 +134,14 @@ class auth extends CI_Controller {
       $Email = $data['Email'];
       $result = $this->apimodel->checkEmail($Email);
       if($result){
-        echo "<script>alert('This email has been registrated');</script>";  
+       // echo "<script>alert('This email has been registrated');</script>";
+        //  $this->load->view('response');
+          $this->errorhandler->errorhandler("40001");
       }else{ 
         $this->apimodel->registration_api($data);
-        echo "<script>alert('Registration Successful');</script>"; 
+       // echo "<script>alert('Registration Successful');</script>";
+       //   $this->load->view('response');
+          $this->errorhandler->errorhandler("200");
       }
     }
 
@@ -130,9 +150,13 @@ class auth extends CI_Controller {
 
 
   public function forgetpass(){
-        $email = $this->session->userdata('Email');
+        $this->load->view('forgetpass');
+}
+    public function forgetpassgo(){
+        $email = $this->input->post('Email');
         $result = $this->apimodel->forgetpass($email);
         if($result != "No"){
+            
             $to = $email;
             $subject = " VIPTeenagers: Reset your password";
             //$message = "Please reset your password by clicking the link below:"
@@ -140,12 +164,16 @@ class auth extends CI_Controller {
             $from = "VIPTeenagers@gmail.com";
             $headers = "From:".$from;
             mail($to,$subject,$message,$headers);
-            echo "<script>alert('Mail Sent');</script>";
+            // echo "<script>alert('Mail Sent');</script>";
+       //     $this->load->view('response');
+            $this->errorhandler->errorhandler("200");
+            
         }
         else{
-            echo "Sorry, we don't have this username.";
+            //   echo "Sorry, we don't have this username.";
+        //    $this->load->view('response');
+            $this->errorhandler->errorhandler("40004");
         }
-        
     }
 
 

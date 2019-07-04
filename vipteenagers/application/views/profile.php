@@ -2,21 +2,21 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>login</title>
+	<title>getprofile</title>
 </head>
 <body>
-	<form action="logingo" method="POST">
+	<form action="profile/getprofile" method="POST">
 		<table>
 			<tr>
-				<th colspan="2">Login Form</th>
+				<th colspan="2">Get Profile</th>
 			</tr>
 			<tr>
 				<td>Email</td>
-				<td>Password</td>
+				
 			</tr>
 			<tr>
 				<td><input type="text" name="email" placeholder="Please Enter Your Email"></td>
-				<td><input type="text" name="password" placeholder="Please Enter Your Password"></td>
+
 			</tr>
 			<tr>
 			<td colspan="2" >	<input type="submit" name="sbumit" value="Submit"></td>
