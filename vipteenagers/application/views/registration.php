@@ -5,7 +5,7 @@
 	<title>Registration</title>
 </head>
 <body>
-	<form action="" method="POST">
+	<form action="registrationgo" method="POST">
 		<table>
 			<tr>
 				<th colspan="2">Registration Form</th>
