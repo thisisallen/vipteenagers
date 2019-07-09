@@ -5,7 +5,7 @@
 	<title>Update Form</title>
 </head>
 <body>
-	<form action="" method="POST">
+	<form action="updatego" method="POST">
 		<table>
 			<tr>
 				<th colspan="2">Update Form</th>

@@ -5,18 +5,17 @@
 	<title>login</title>
 </head>
 <body>
-	<form action="logingo" method="POST">
+	<form action="forgetpassgo" method="POST">
 		<table>
 			<tr>
 				<th colspan="2">Login Form</th>
 			</tr>
 			<tr>
-				<td>Email</td>
-				<td>Password</td>
+				<td>Your Email</td>
+
 			</tr>
 			<tr>
-				<td><input type="text" name="email" placeholder="Please Enter Your Email"></td>
-				<td><input type="text" name="password" placeholder="Please Enter Your Password"></td>
+				<td><input type="text" name="Email" placeholder="Please Enter Your Email"></td>
 			</tr>
 			<tr>
 			<td colspan="2" >	<input type="submit" name="sbumit" value="Submit"></td>
