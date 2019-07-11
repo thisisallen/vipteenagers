@@ -54,7 +54,40 @@ class apimodel extends CI_Model{
 
     public function getTeacherList(){
         $query = $this->db->query(" Select * from User where User_type = 'Teacher'");
+<<<<<<< Updated upstream
         return $query;
+=======
+        return $query->result_array();
+    }
+    
+    public function insertVcode($vcode,$email){
+        $query = $this->db->query("Insert into Forgetpass VALUES('$vcode','$email')");
+    }
+    
+    public function getUserID_E($email){
+        $query = $this->db->query("Select UserID from User where Email = '$email'");
+        return $query->row_array();
+    }
+    
+    public function verify_ev($email,$vcode){
+        $query = $this->db->query("Select * from Forgetpass where Email = '$email' and vcode= '$vcode'");
+        $result = $query->row_array();
+        if(!$result){
+            return "False";
+        }
+        else{
+            return "True";
+        }
+    }
+    
+    public function delete_v($vcode){
+        $query = $this->db->query("Delete from Forgetpass where vcode = '$vcode'");
+    }
+    
+    public function resetPass($userid,$password){
+        $query = $this->db->query("Update User set Password = '$password' where UserID = '$userid'");
+        return "Update works.";
+>>>>>>> Stashed changes
     }
 }
 
