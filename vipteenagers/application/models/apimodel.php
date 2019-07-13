@@ -18,6 +18,47 @@ class apimodel extends CI_Model{
 
         $this->db->insert('User',$data);      
     }
+    
+
+    public function ai_userid($User_type){
+        if($User_type == 'Student'){
+        $query = $this->db->query("SELECT MAX(UserID) from User WHERE UserID LIKE '1%' ");
+        $result = $query->row_array();
+        $checkID = $this->db->query("SELECT * from User WHERE UserID LIKE '1%' ");
+        if($checkID->num_rows()> 0){
+            $UserID = (int)$result['MAX(UserID)'] + 1;
+            
+        }else{
+            $UserID = 1000000;
+        }
+        
+      }else if($User_type == 'Teacher'){
+        $query = $this->db->query("SELECT MAX(UserID) from User WHERE UserID LIKE '2%' ");
+        $result = $query->row_array();
+        $checkID = $this->db->query("SELECT * from User WHERE UserID LIKE '2%' ");
+        if($checkID->num_rows()> 0){
+            $UserID = (int)$result['MAX(UserID)'] + 1;
+            
+        }else{
+            $UserID = 2000000;
+        }
+        
+      }else if ($User_type == 'Advisor') {
+        $query = $this->db->query("SELECT MAX(UserID) from User WHERE UserID LIKE '3%' ");
+        $result = $query->row_array();
+        $checkID = $this->db->query("SELECT * from User WHERE UserID LIKE '3%' ");
+        if($checkID->num_rows()> 0){
+            $UserID = (int)$result['MAX(UserID)'] + 1;
+            
+        }else{
+            $UserID = 3000000;
+        }
+        
+      }
+
+      return $UserID;
+    }
+
 
     public function checkEmail($Email){
         $query = $this->db->query("SELECT * from User WHERE Email = '$Email'");
@@ -52,11 +93,13 @@ class apimodel extends CI_Model{
         }
     }
 
+    public function getOwnProfile($UserID){
+        $query = $this->db->query("Select * from User where UserID = '$UserID'");
+        return $query;
+    }
+
     public function getTeacherList(){
         $query = $this->db->query(" Select * from User where User_type = 'Teacher'");
-<<<<<<< Updated upstream
-        return $query;
-=======
         return $query->result_array();
     }
     
@@ -87,8 +130,9 @@ class apimodel extends CI_Model{
     public function resetPass($userid,$password){
         $query = $this->db->query("Update User set Password = '$password' where UserID = '$userid'");
         return "Update works.";
->>>>>>> Stashed changes
     }
+    
+    
 }
 
 ?>

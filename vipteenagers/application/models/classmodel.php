@@ -33,6 +33,29 @@ class classmodel extends CI_Model{
         return $query->row_array();
     }
 
+    public function getLesson($LessonID){
+        $query = $this->db->query("SELECT * FROM Lesson WHERE LessonID = '$LessonID' ");
+        return $query->row_array();
+    }
+
+    public function getLessonConfirm($LessonID){
+        $query = $this->db->query("SELECT * FROM LessonConfirm WHERE LessonID = '$LessonID' ");
+        return $query->row_array();
+    }
+
+    public function myClass($UserType,$UserID){
+        if($UserType == "Teacher"){
+            $query = $this->db->query("SELECT * FROM Class WHERE TeacherID = '$UserID'");
+        }
+        elseif ($UserType == "Student") {
+            $query = $this->db->query("SELECT * FROM Class WHERE Student1ID = '$UserID' OR Student2ID = '$UserID' OR Student3ID = '$UserID' OR Student4ID = '$UserID'");
+        }
+        elseif ($UserType == "Advisor"){
+            $query = $this->db->query("SELECT * FROM CLASS WHERE AdvisorID = '$UserID'");
+        }
+        return $query->result_array();
+    }
+
 	
     
     
