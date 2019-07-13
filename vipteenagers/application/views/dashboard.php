@@ -10,42 +10,44 @@
 			<tr>
 				<th>User Profile</th>
 			</tr>
+			<?php foreach ($query_result->result() as $row): ?>
 			<tr>
-				<td>User ID:<?php echo $this->session->userdata('UserID');?></td>
+				<td>User ID:<?php echo $row->UserID; ?></td>
 			</tr>
 			<tr>
-				<td>Email:<?php echo $this->session->userdata('Email');?></td>
+				<td>Email:<?php echo $row->Email; ?></td>
 			</tr>
 			<tr>
-				<td>Phone:<?php echo $this->session->userdata('Phone');?></td>
+				<td>Phone:<?php echo $row->Phone; ?></td>
 			</tr>
 			<tr>
-				<td>User_type:<?php echo $this->session->userdata('User_type');?></td>
+				<td>User_type:<?php echo $row->User_type; ?></td>
 			</tr>
 			<tr>
-				<td>Icon:<?php echo $this->session->userdata('Icon');?></td>
+				<td>Icon:<?php echo $row->Icon; ?></td>
 			</tr>
 			<tr>
-				<td>Last_name:<?php echo $this->session->userdata('Last_name');?></td>
+				<td>Last_name:<?php echo $row->Last_name; ?></td>
 			</tr>
 			<tr>
-				<td>First_name:<?php echo $this->session->userdata('First_name');?></td>
+				<td>First_name:<?php echo $row->First_name; ?></td>
 			</tr>
 			<tr>
-				<td>Age:<?php echo $this->session->userdata('Age');?></td>
+				<td>Age:<?php echo $row->Age; ?></td>
 			</tr>
 			<tr>
-				<td>WeChat_ID:<?php echo $this->session->userdata('WeChat_ID');?></td>
+				<td>WeChat_ID:<?php echo $row->WeChat_ID; ?></td>
 			</tr>
 			<tr>
-				<td>Registration_date:<?php echo $this->session->userdata('Registration_date');?></td>
+				<td>Registration_date:<?php echo $row->Registration_date; ?></td>
 			</tr>
 			<tr>
-				<td>Date_of_Birth:<?php echo $this->session->userdata('Date_of_Birth');?></td>
+				<td>Date_of_Birth:<?php echo $row->Date_of_Birth; ?></td>
 			</tr>
 			<tr>
-				<td>Gender:<?php echo $this->session->userdata('Gender');?></td>
+				<td>Gender:<?php echo $row->Gender; ?></td>
 			</tr>
+			<?php endforeach; ?>
 		</table>
 	</form>
 	

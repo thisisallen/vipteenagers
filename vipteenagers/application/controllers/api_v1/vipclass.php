@@ -46,6 +46,8 @@ class vipclass extends CI_Controller {
             'Student2ID' => $this->input->post('Student2ID'),
             'Student3ID' => $this->input->post('Student3ID'),
             'Student4ID' => $this->input->post('Student4ID'),
+            'ZoomID' => $this->input->post('ZoomID'),
+            'ZoomCode' => $this->input->post('ZoomCode'),
             'Confirm' => FALSE,
             'CreateTime' => $timestamp,
           );  
@@ -83,6 +85,8 @@ class vipclass extends CI_Controller {
             'PackageID' => $this->input->post('PackageID'),
             'Classname' => $this->input->post('Classname'),
             'Classlevel' => $this->input->post('Classlevel'),
+            'ZoomID' => $this->input->post('ZoomID'),
+            'ZoomCode' => $this->input->post('ZoomCode'),
           ); 
 
           //get class data
@@ -135,6 +139,125 @@ class vipclass extends CI_Controller {
       $this->errorhandler->errorhandler('40003');
     }
   }
+
+  public function startlesson(){
+    //check if user logged in
+    if($this->session->UserID){
+      $LessonID = $this->input->post('LessonID'); 
+      //get lesson data
+      $info = $this->classmodel->getLesson($LessonID);
+      //get class data
+      $class = $this->classmodel->getClass($info['ClassID']);
+      //check if user type is advisor
+      if($this->session->User_type == 'Advisor'){
+        if ($info['Start'] == FALSE && $class['AdvisorID'] == $this->session->UserID) {
+          $data = array(           
+            'Start' => TRUE,
+          );
+          //get lesson data
+          $this->db->where('LessonID',$LessonID);
+          //start class
+          $this->db->update('Lesson',$data);
+        }else{
+          echo "This lesson has already started or user id is wrong";
+        }
+        //or if user type is teacher
+      }else if($this->session->User_type == 'Teacher'){
+        if ($info['Start'] == FALSE && $class['TeacherID'] == $this->session->UserID) {
+          $data = array(           
+            'Start' => TRUE,
+          );
+          //get lesson data
+          $this->db->where('LessonID',$LessonID);
+          //start class
+          $this->db->update('Lesson',$data);
+        }else{
+          
+          echo "This lesson has already started or user id is wrong";
+        }
+      }else{
+        //if user is not Advisor or Teacher
+        echo "Only teacher and advisor can start a lesson";
+      }
+    }else{
+      //if user didn't log in, pass to errorhandler: 'Permission dennied'.;
+      $this->errorhandler->errorhandler('40003');
+    }
+  }
+
+  public function confirmlesson(){
+    //check if user logged in
+    if($this->session->UserID){
+      //post LessonID
+      $LessonID = $this->input->post('LessonID');
+      //get lesson data
+      $lesson = $this->classmodel->getLesson($LessonID);
+      //get class data
+      $class = $this->classmodel->getClass($lesson['ClassID']);
+      //get lessonConfirm data
+      $lessonConfirm = $this->classmodel->getLessonConfirm($LessonID);
+      //if user is student1 and student1 doesn't confirm
+      if($this->session->UserID == $class['Student1ID'] && $lessonConfirm['Student1Confirm'] == FALSE){
+        $data = array(           
+            'Student1Confirm' => TRUE,
+          );
+        //get lesson data
+        $this->db->where('LessonID',$LessonID);
+        //student1 confirm class
+        $this->db->update('LessonConfirm',$data);
+
+      //if user is student2 and student2 doesn't confirm
+      }else if($this->session->UserID == $class['Student2ID'] && $lessonConfirm['Student2Confirm'] == FALSE){
+        $data = array(           
+            'Student2Confirm' => TRUE,
+          );
+        //get lesson data
+        $this->db->where('LessonID',$LessonID);
+        //student2 confirm class
+        $this->db->update('LessonConfirm',$data);
+
+        //if user is student3 and student3 doesn't confirm
+      }else if($this->session->UserID == $class['Student3ID'] && $lessonConfirm['Student3Confirm'] == FALSE){
+        $data = array(           
+            'Student3Confirm' => TRUE,
+          );
+        //get lesson data
+        $this->db->where('LessonID',$LessonID);
+        //student3 confirm class
+        $this->db->update('LessonConfirm',$data);
+
+        //if all students has confirmed and lesson doesn't confirm
+      }else if($lessonConfirm['Student1Confirm'] == TRUE && $lessonConfirm['Student2Confirm'] == TRUE && $lessonConfirm['Student3Confirm'] == TRUE && $lesson['Confirm'] == FALSE ){
+        $data = array(           
+            'Confirm' => TRUE,
+          );
+        //get lesson data
+        $this->db->where('LessonID',$LessonID);
+        //confirm lesson
+        $this->db->update('Lesson',$data);
+      }else{
+        echo "You can't confirm or you has already confirmed";
+      }
+
+    }else{
+      //if user didn't log in, pass to errorhandler: 'Permission dennied'.;
+      $this->errorhandler->errorhandler('40003');
+    }
+  }
+
+  public function myclass(){
+    if($this->session->UserID){
+      $result = $this->classmodel->myClass($this->session->User_type,$this->session->UserID);
+      $params = array( 'code' => 200, 'message' => $result);
+      // Pass code: 200 and the array to response.php
+      $this->load->view('response',$params);
+
+    }else{
+      //if user didn't log in, pass to errorhandler: 'Permission dennied'.;
+      $this->errorhandler->errorhandler('40003');
+    }
+  }
+
 
   
 
