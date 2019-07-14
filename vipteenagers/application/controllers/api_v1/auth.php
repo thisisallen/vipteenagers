@@ -1,55 +1,57 @@
 <?php
 class auth extends CI_Controller {
 
-  public function __construct()
-  {
-    parent::__construct();
-    $this->load->helper('url');
-    $this->load->model('apimodel');
-    $this->load->model('errorhandler');
-    $this->load->helper('form','url');
-    $this->load->library('form_validation');
-  }
+    public function __construct()
+    {
+      parent::__construct();
+      $this->load->helper('url');
+      $this->load->model('apimodel');
+      $this->load->model('errorhandler');
+      $this->load->helper('form','url');
+      $this->load->library('form_validation');
+    }
 
-  
-  
-
-  public function index()
-  {
-      $this->load->view('templates/header');
-  }
-
-  public function login($page = 'login')
-  {
-      if (!$this->session->UserID)                                                                              //if the user didn't login to the website:
-      { 
-          $this->load->view('templates/header');                              
-          $this->load->view($page);                                                                                 //load login page.
-      }
-      else                                                                                                      //if the user was logged in to the website:   
-      {                  
-          redirect('api_v1/auth/dashboard','refresh');                                                              //redirect to different userpage(current: Dashboard).
-      }
-  }
     
-    public function logingo($page = 'login')
-    {                                                               
-        $this->form_validation->set_rules('email', 'Email', 'required|min_length[3]|valid_email');              // Validation: Regular expression for email.(Can be replaced by JS)
-        $this->form_validation->set_rules('password', 'Password', 'required|min_length[3]');                    // Validation: Regular expression for password.(Can be replaced by JS)
-        if ($this->form_validation->run() == FALSE)            
-                                                                  // If Validation failed:
-            {
-               
-                $this->errorhandler->errorhandler("40002");
-             
-                                                                         // pass to errorhandler: "Invalid form: Email or password!";
-            }
-            else{                                                                                               //If Validation passed:
+    public function index()
+    {
+        $this->load->view('templates/header');
+    }
 
-              $email = $this->input->post('email');
-              $pass = $this->input->post('password');
-              $data = $this->apimodel->login_api($email,$pass);                                                 // read posts from view, send them into function "login_api"
-              if($data){                                                                                        // If the username is in the database:      
+    
+    public function login($page = 'login')
+    {
+        if (!$this->session->UserID)                                                                              //if the user didn't login to the website:
+        { 
+            $this->load->view('templates/header');                              
+            $this->load->view($page);                                                                                 //load login page.
+        }
+        else                                                                                                      //if the user was logged in to the website:   
+        {                  
+            redirect('api_v1/auth/dashboard','refresh');                                                              //redirect to different userpage(current: Dashboard).
+        }
+    }
+    
+
+    public function logingo()
+    {
+        // Registration From Validation
+        $this->form_validation->set_rules('email', 'Email', 'required|min_length[3]|valid_email');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[3]');
+
+        if (!$this->form_validation->run()) { // Validation Failed: 
+          $this->errorhandler->errorhandler("40002");
+        } else { 
+            // Validation Success, then:
+            // Get post data
+            // TODO: Switch to json data. 
+            $email = $this->input->post('email');
+            $pass = $this->input->post('password');
+
+            // Authentication
+            $data = $this->apimodel->login_api($email,$pass);
+
+            // User Exist: 
+            if($data){
                 $UserID = $data['UserID'];
                 $Email = $data['Email'];
                 $Phone = $data['Phone'];
@@ -63,44 +65,62 @@ class auth extends CI_Controller {
                 $Date_of_Birth = $data['Date_of_Birth'];
                 $Gender = $data['Gender'];
         
-                $sesdata = array(                                                                                  // separate the return and append those into an array. 
-                                 'UserID' => $UserID,
-                                 'Email' => $Email,
-                                 'Phone' => $Phone,
-                                 'User_type' => $User_type,
-                                 'Icon' => $Icon,
-                                 'Last_name' => $Last_name,
-                                 'First_name' => $First_name,
-                                 'Age' => $Age,
-                                 'WeChat_ID' => $WeChat_ID,
-                                 'Registration_date' => $Registration_date,
-                                 'Date_of_Birth' => $Date_of_Birth,
-                                 'Gender' => $Gender,
-                                 'logged_in' => TRUE
-                                 );
-                $this->session->set_userdata($sesdata);                                                            // Store all these into session.                                    
-                
+                $sesdata = array(
+                                  'UserID' => $UserID,
+                                  'Email' => $Email,
+                                  'User_type' => $User_type,
+                                  );
+                $this->session->set_userdata($sesdata);
                   
-                $params = array( 'code' => 200, 'message' => $sesdata);
+                $params = array( 'code' => 200, 'message' => $data);
                 $this->load->view('response',$params);
 
-                redirect('api_v1/auth/dashboard');                                                             // Pass code: 200 and this array to response.php
-
+                // redirect('api_v1/auth/dashboard');
             } 
-            else                                                                                                // If the username doesn't exist in the database,
+            // User Not Exist:
+            else
             {
-                $this->errorhandler->errorhandler("40005");                                                        // Pass to errorhandler: 'Email or Password is not correct';
+              $this->errorhandler->errorhandler("40005");
             }
-        
-            }
+        }
     }
 
+
+  /**
+   * @Return Format: HTML
+   */
   public function dashboard($page = 'dashboard'){
     $UserID = $this->session->UserID;
+    if(!$UserID) {
+      $this->errorhandler->errorhandler("40003");
+    }
     $data['query_result'] = $this->apimodel->getOwnProfile($UserID);
     $this->load->view('templates/headerProfile');  
     $this->load->view($page,$data);
   }
+
+
+  /**
+   * @ Return Format: JSON
+   * @ Controller Description: Return current user profile.
+   */
+  public function profile(){
+    $UserID = $this->session->UserID;
+
+    // Session Check
+    if(!$UserID) {
+      $this->errorhandler->errorhandler("40003");
+    }
+
+    // Construct Response
+    $Q = $this->apimodel->getOwnProfile($UserID);
+
+    // Return Json
+    header('content-Type: application/json; charset=utf-8');
+    $params = array( 'code' => 200, 'message' => $Q->result_array());
+    $this->load->view('response',$params);
+  }
+
 
   public function logout()
     {
@@ -120,6 +140,7 @@ class auth extends CI_Controller {
           
     }
 
+
   public function registration()
     {
         if(!$this->session->UserID)                                                                             // if the user was logged in to the website:
@@ -133,6 +154,8 @@ class auth extends CI_Controller {
             }
 
     }
+
+
   public function registrationgo(){
     $this->form_validation->set_rules('email', 'Email', 'required|min_length[3]|valid_email');                  // Validation: Regular expression for email.(Can be replaced by JS)
     if ($this->form_validation->run() == FALSE)                                                                 // If Validation failed:
@@ -174,11 +197,14 @@ class auth extends CI_Controller {
         }
       }
   }
+
+
   public function generateV(){
       $strs="QWERTYUIOPASDFGHJKLZXCVBNM1234567890qwertyuiopasdfghjklzxcvbnm";
       $name=substr(str_shuffle($strs),mt_rand(0,strlen($strs)-11),6);
       return $name;
   } 
+
 
   public function forgetpass(){
       if(!$this->session->UserID)                                                                               // if the user didn't login to the website:
@@ -191,6 +217,8 @@ class auth extends CI_Controller {
           redirect('api_v1/auth/dashboard','refresh');                                                                // Redirect to dashboard page.
         }
   }
+
+
   public function forgetpassgo(){
       $email = $this->input->post('Email'); 
       $result = $this->apimodel->forgetpass($email);                                                            // Read email from view, send it to function "forgetpass".
@@ -232,6 +260,8 @@ class auth extends CI_Controller {
           }
           $this->load->view('resetpass');                                                                       // load resetpass view.
   }
+
+
   public function resetpassgo(){
       if ($this->session->UserID)                                                                               // Users can only come from userpage or forgetpass(), in either way UserID should already in the session.
       {    

@@ -1,22 +1,16 @@
 <?php
 
-
-/*
-//$message = ();
-foreach ($query_result->result() as $row): 
-	$message[] = array( 'UserID' => $row->UserID, 'Email' => $row->Email);
-endforeach;
-*/
-
-
-
+// HTTP Resp Headers
 header('content-Type: application/json; charset=utf-8');
 
+// Construct Response Message
 $resp =  array(
 	"code" => $code, 
 	"message" => $message,
-) ;
-echo json_encode($resp);
-  
+);
+
+// Return Response
+$JSON = json_encode($resp);
+echo $JSON;
     
 ?>
