@@ -11,12 +11,12 @@
 				<th colspan="2">Registration Form</th>
 			</tr>
 			<tr>				
-				<td>email</td>
+				<td>Email</td>
 				<td>Password</td>
 			</tr>
 			<tr>
 				<td><input type="text" name="email" ></td>
-				<td><input type="text" name="password"></td>
+				<td><input type="password" name="password"></td>
 			</tr>
 			<tr>
 				
@@ -26,7 +26,13 @@
 			<tr>
 				
 				<td><input type="text" name="phone"></td>
-				<td><input type="text" name="gender" ></td>
+				<td>
+					<select name="gender">
+						<option value="Female">Female</option>
+						<option value="Male">Male</option>
+						<option value="Other">Other</option>
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<td>User Type</td>
@@ -62,7 +68,7 @@
 				<td>Date of Birth</td>
 			</tr>
 			<tr>
-				<td><input type="text" name="date_of_Birth"></td>
+				<td><input type="date" name="date_of_Birth"></td>
 			</tr>
 	
 			<tr>

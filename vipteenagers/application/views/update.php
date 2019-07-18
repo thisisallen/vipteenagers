@@ -6,7 +6,7 @@
 </head>
 <body>
 	<form action="updatego" method="POST">
-		<table>
+		<table border="5px">
 			<tr>
 				<th colspan="2">Update Form</th>
 			</tr>
@@ -16,22 +16,22 @@
 				<td>Gender</td>
 			</tr>
 			<tr>
-				<td><input type="text" name="email" value="<?php echo $row->Email; ?>"></td>
-				<td><input type="text" name="gender" value="<?php echo $row->Gender; ?>" ></td>
-			</tr>
-			<tr>
-				<td>Password</td>
-				<td>Phone</td>
-			</tr>
-			<tr>
-				<td><input type="text" name="password" value="<?php echo $row->Password; ?>"></td>
-				<td><input type="text" name="phone" value="<?php echo $row->Phone; ?>"></td>
+				<td><?php echo $row->Email; ?></td> 
+				<td>
+					<select name="gender">
+						<option value="Female" <?php echo $row->Gender == 'Female' ? 'selected="selected"':null ?> >Female</option>
+						<option value="Male" <?php echo $row->Gender == 'Male' ? 'selected="selected"':null ?>>Male</option>
+						<option value="Other" <?php echo $row->Gender == 'Other' ? 'selected="selected"':null ?>>Other</option>
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<td>Icon</td>
+				<td>Phone</td>
 			</tr>
 			<tr>
 				<td><input type="text" name="icon" value="<?php echo $row->Icon; ?>"></td>
+				<td><input type="text" name="phone" value="<?php echo $row->Phone; ?>"></td>
 			</tr>
 			<tr>
 				<td>Last Name</td>
@@ -50,19 +50,20 @@
 				<td><input type="text" name="weChat_ID" value="<?php echo $row->WeChat_ID; ?>"></td>
 			</tr>
 			<tr>
-				<td>Registration Date</td>
 				<td>Date of Birth</td>
 			</tr>
 			<tr>
-				<td><input type="text" name="registration_date" value="<?php echo $row->Registration_date; ?>" ></td>
-				<td><input type="text" name="date_of_Birth" value="<?php echo $row->Date_of_Birth; ?>"></td>
+				<td><input type="date" name="date_of_Birth" value="<?php echo $row->Date_of_Birth; ?>"></td>
 			</tr>
 		<?php endforeach ?>
 			
-			<tr>
-			<td colspan="2" >	<input type="submit" name="sbumit" value="Submit"></td>
-		</tr>
+			<tr align = "center">
+				<td colspan="2" ><input type="submit" name="sbumit" value="Submit"></td>
+			</tr>
 		</table>
+		<input style="display: none;" type="text" name="password" value="<?php echo $row->Password; ?>" />
+		<input style="display: none;" type="text" name="registration_date" value="<?php echo $row->Registration_date; ?>" />
+		<input style="display: none;" type="text" name="email" value="<?php echo $row->Email; ?>" />
 	</form>
 	
 </body>

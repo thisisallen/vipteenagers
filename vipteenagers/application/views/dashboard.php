@@ -6,7 +6,7 @@
 </head>
 <body>
 	<form>
-		<table>
+		<table border = "3px">
 			<tr>
 				<th>User Profile</th>
 			</tr>

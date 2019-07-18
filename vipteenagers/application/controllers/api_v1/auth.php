@@ -14,7 +14,7 @@ class auth extends CI_Controller {
     
     public function index()
     {
-        $this->load->view('templates/header');
+      redirect('api_v1/auth/login','refresh');
     }
 
     
@@ -75,7 +75,7 @@ class auth extends CI_Controller {
                 $params = array( 'code' => 200, 'message' => $data);
                 $this->load->view('response',$params);
 
-                // redirect('api_v1/auth/dashboard');
+                redirect('api_v1/auth/dashboard');
             } 
             // User Not Exist:
             else
