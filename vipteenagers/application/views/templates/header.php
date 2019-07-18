@@ -12,9 +12,12 @@
 <body>	
 	<nav>
 		<a href="<?php echo base_url() ?>index.php/api_v1/auth">Home Page</a>
-		<a href="<?php echo base_url() ?>index.php/api_v1/auth/registration">Registration</a>		
+		<a href="<?php echo base_url() ?>index.php/api_v1/auth/registration">Registration</a>
+		<a href="<?php echo base_url() ?>index.php/api_v1/auth/teacherregistration">Teacher Registration</a>
+		<a href="<?php echo base_url() ?>index.php/api_v1/auth/advisorregistration">Advisor Registration</a>
+		<a href="<?php echo base_url() ?>index.php/api_v1/auth/studentregistration">Student Registration</a>		
 		<a href="<?php echo base_url() ?>index.php/api_v1/auth/login">Log In</a>
 		<a href="<?php echo base_url() ?>index.php/api_v1/auth/forgetpass">Forget Password</a>
-	</nav> 
+	</nav>
 
 	

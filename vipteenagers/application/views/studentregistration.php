@@ -5,7 +5,7 @@
 	<title>Registration</title>
 </head>
 <body>
-	<form action="registrationgo" method="POST">
+	<form method="POST">
 		<table>
 			<tr>
 				<th colspan="2">Registration Form</th>
@@ -16,7 +16,7 @@
 			</tr>
 			<tr>
 				<td><input type="text" name="email" ></td>
-				<td><input type="password" name="password"></td>
+				<td><input type="text" name="password"></td>
 			</tr>
 			<tr>
 				
@@ -26,26 +26,12 @@
 			<tr>
 				
 				<td><input type="text" name="phone"></td>
-				<td>
-					<select name="gender">
-						<option value="Female">Female</option>
-						<option value="Male">Male</option>
-						<option value="Other">Other</option>
-					</select>
-				</td>
+				<td><input type="text" name="gender" ></td>
 			</tr>
 			<tr>
-				<td>User Type</td>
 				<td>Icon</td>
 			</tr>
 			<tr>
-				<td>
-					<select name="user_type">
-						<option value="Student">Student</option>
-						<option value="Teacher">Teacher</option>
-					    <option value="Advisor">Advisor</option>
-					</select>
-				</td>
 				<td><input type="text" name="icon"></td>
 			</tr>
 			<tr>
@@ -66,9 +52,41 @@
 			</tr>
 			<tr>
 				<td>Date of Birth</td>
+				<td>Grade</td>
 			</tr>
 			<tr>
 				<td><input type="date" name="date_of_Birth"></td>
+				<td><input type="text" name="grade"></td>
+			</tr>
+			<tr>
+				<td>Description</td>
+				<td>Class Level</td>
+			</tr>
+			<tr>
+				<td><input type="text" name="description"></td>
+				<td><input type="text" name="class_level"></td>
+			</tr>
+			<tr>
+				<td>Intitial_deposit_date</td>
+				<td>Tuition</td>
+			</tr>
+			<tr>
+				<td><input type="text" name="intitial_deposit_date"></td>
+				<td><input type="text" name="tuition"></td>
+			</tr>
+			<tr>
+				<td>Balance</td>
+				<td>Course</td>
+			</tr>
+			<tr>
+				<td><input type="text" name="balance"></td>
+				<td><input type="text" name="courseID"></td>
+			</tr>
+			<tr>
+				<td>Advisor</td>
+			</tr>
+			<tr>
+				<td><input type="text" name="advisorID"></td>
 			</tr>
 	
 			<tr>

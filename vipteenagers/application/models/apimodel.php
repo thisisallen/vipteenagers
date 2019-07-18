@@ -19,6 +19,18 @@ class apimodel extends CI_Model{
         $this->db->insert('User',$data);      
     }
     
+    public function registration_teacher($data){
+        $this->db->insert('Teacher',$data);
+    }
+
+    public function registration_advisor($data){
+        $this->db->insert('Advisor',$data);
+    }
+
+    public function registration_student($data){
+        $this->db->insert('Student',$data);
+    }
+    
 
     public function ai_userid($User_type){
         if($User_type == 'Student'){

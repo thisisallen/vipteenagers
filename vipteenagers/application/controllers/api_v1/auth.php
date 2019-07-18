@@ -199,6 +199,239 @@ class auth extends CI_Controller {
   }
 
 
+  public function teacherregistration(){
+    $this->form_validation->set_rules('email', 'Email', 'required|min_length[3]|valid_email');
+    if (!$this->form_validation->run()) {
+      $this->load->view('templates/header');
+      $this->load->view('teacherregistration');
+    }else{
+      $User_type = 'Teacher';
+      $UserID = $this->apimodel->ai_userid($User_type); 
+
+      $basicdata = array(
+        'UserID' => $UserID,
+        'Email' => $this->input->post('email'),
+        'Password' => $this->input->post('password'),
+        'Phone' => $this->input->post('phone'),
+        'User_type' => $User_type,
+        'Icon' => $this->input->post('icon'),
+        'Last_name' => $this->input->post('last_name'),
+        'First_name' => $this->input->post('first_name'),
+        'Age' => $this->input->post('age'),
+        'WeChat_ID' => $this->input->post('weChat_ID'),
+        'Date_of_Birth' => $this->input->post('date_of_Birth'),
+        'Gender' => $this->input->post('gender'), 
+      );
+
+      $teacherdata = array(
+        'TeacherID' => $UserID,
+        'Type' => $this->input->post('type'),
+        'Description' => $this->input->post('description'),
+        'Title' => $this->input->post('title'),
+        'Schedule' => $this->input->post('schedule'),
+        'Rate' => $this->input->post('rate'),
+        'Status' => $this->input->post('status'),
+        'Income' => $this->input->post('income'),
+        'Audit' => $this->input->post('audit'),
+      );
+
+      $data = array(
+        'UserID' => $UserID,
+        'Email' => $this->input->post('email'),
+        'Password' => $this->input->post('password'),
+        'Phone' => $this->input->post('phone'),
+        'User_type' => $User_type,
+        'Icon' => $this->input->post('icon'),
+        'Last_name' => $this->input->post('last_name'),
+        'First_name' => $this->input->post('first_name'),
+        'Age' => $this->input->post('age'),
+        'WeChat_ID' => $this->input->post('weChat_ID'),
+        'Date_of_Birth' => $this->input->post('date_of_Birth'),
+        'Gender' => $this->input->post('gender'),
+        'TeacherID' => $UserID,
+        'Type' => $this->input->post('type'),
+        'Description' => $this->input->post('description'),
+        'Title' => $this->input->post('title'),
+        'Schedule' => $this->input->post('schedule'),
+        'Rate' => $this->input->post('rate'),
+        'Status' => $this->input->post('status'),
+        'Income' => $this->input->post('income'),
+        'Audit' => $this->input->post('audit'),
+      );
+
+      $Email = $basicdata['Email'];
+      $result = $this->apimodel->checkEmail($Email);
+      if($result){
+        // Pass to errorhandler: 'Email has been registered';
+        $this->errorhandler->errorhandler("40001"); 
+      }else{
+        //insert basic data to User table
+        $this->apimodel->registration_api($basicdata); 
+        //insert teacher data to Teacher table
+        $this->apimodel->registration_teacher($teacherdata);
+
+        $params = array( 'code' => 200, 'message' => $data);
+        // Pass code: 200 and the array to response.php
+        $this->load->view('response',$params); 
+        // Redirect to login page                                                                      
+        redirect('api_v1/auth/login','refresh');                                                                      
+      }
+
+    }
+  }
+
+  public function advisorregistration(){
+    $this->form_validation->set_rules('email', 'Email', 'required|min_length[3]|valid_email');
+    if (!$this->form_validation->run()) {
+      $this->load->view('templates/header');
+      $this->load->view('advisorregistration');
+    }else{
+      $User_type = 'Advisor';
+      $UserID = $this->apimodel->ai_userid($User_type); 
+
+      $basicdata = array(
+        'UserID' => $UserID,
+        'Email' => $this->input->post('email'),
+        'Password' => $this->input->post('password'),
+        'Phone' => $this->input->post('phone'),
+        'User_type' => $User_type,
+        'Icon' => $this->input->post('icon'),
+        'Last_name' => $this->input->post('last_name'),
+        'First_name' => $this->input->post('first_name'),
+        'Age' => $this->input->post('age'),
+        'WeChat_ID' => $this->input->post('weChat_ID'),
+        'Date_of_Birth' => $this->input->post('date_of_Birth'),
+        'Gender' => $this->input->post('gender'), 
+      );
+
+      $advisordata = array(
+        'AdvisorID' => $UserID,
+        'Rate' => $this->input->post('rate'),
+        'Income' => $this->input->post('income'),
+      );
+
+      $data = array(
+        'UserID' => $UserID,
+        'Email' => $this->input->post('email'),
+        'Password' => $this->input->post('password'),
+        'Phone' => $this->input->post('phone'),
+        'User_type' => $User_type,
+        'Icon' => $this->input->post('icon'),
+        'Last_name' => $this->input->post('last_name'),
+        'First_name' => $this->input->post('first_name'),
+        'Age' => $this->input->post('age'),
+        'WeChat_ID' => $this->input->post('weChat_ID'),
+        'Date_of_Birth' => $this->input->post('date_of_Birth'),
+        'Gender' => $this->input->post('gender'),
+        'AdvisorID' => $UserID,    
+        'Rate' => $this->input->post('rate'),
+        'Income' => $this->input->post('income'),
+       
+      );
+
+      $Email = $basicdata['Email'];
+      $result = $this->apimodel->checkEmail($Email);
+      if($result){
+        // Pass to errorhandler: 'Email has been registered';
+        $this->errorhandler->errorhandler("40001"); 
+      }else{
+        //insert basic data to User table
+        $this->apimodel->registration_api($basicdata); 
+        //insert teacher data to Teacher table
+        $this->apimodel->registration_advisor($advisordata);
+
+        $params = array( 'code' => 200, 'message' => $data);
+        // Pass code: 200 and the array to response.php
+        $this->load->view('response',$params); 
+        // Redirect to login page                                                                      
+        redirect('api_v1/auth/login','refresh');                                                                      
+      }
+
+    }
+  }
+
+  public function studentregistration(){
+    $this->form_validation->set_rules('email', 'Email', 'required|min_length[3]|valid_email');
+    if (!$this->form_validation->run()) {
+      $this->load->view('templates/header');
+      $this->load->view('studentregistration');
+    }else{
+      $User_type = 'Student';
+      $UserID = $this->apimodel->ai_userid($User_type); 
+
+      $basicdata = array(
+        'UserID' => $UserID,
+        'Email' => $this->input->post('email'),
+        'Password' => $this->input->post('password'),
+        'Phone' => $this->input->post('phone'),
+        'User_type' => $User_type,
+        'Icon' => $this->input->post('icon'),
+        'Last_name' => $this->input->post('last_name'),
+        'First_name' => $this->input->post('first_name'),
+        'Age' => $this->input->post('age'),
+        'WeChat_ID' => $this->input->post('weChat_ID'),
+        'Date_of_Birth' => $this->input->post('date_of_Birth'),
+        'Gender' => $this->input->post('gender'), 
+      );
+
+      $studentdata = array(
+        'StudentID' => $UserID,
+        'Grade' => $this->input->post('grade'),
+        'Description' => $this->input->post('description'),
+        'Class_level' => $this->input->post('class_level'),
+        'Intitial_deposit_date' => $this->input->post('intitial_deposit_date'),
+        'Tuition' => $this->input->post('tuition'),
+        'Balance' => $this->input->post('balance'),
+        'Course' => $this->input->post('courseID'),
+        'Advisor' => $this->input->post('advisorID'),
+      );
+
+      $data = array(
+        'UserID' => $UserID,
+        'Email' => $this->input->post('email'),
+        'Password' => $this->input->post('password'),
+        'Phone' => $this->input->post('phone'),
+        'User_type' => $User_type,
+        'Icon' => $this->input->post('icon'),
+        'Last_name' => $this->input->post('last_name'),
+        'First_name' => $this->input->post('first_name'),
+        'Age' => $this->input->post('age'),
+        'WeChat_ID' => $this->input->post('weChat_ID'),
+        'Date_of_Birth' => $this->input->post('date_of_Birth'),
+        'Gender' => $this->input->post('gender'),
+        'StudentID' => $UserID,
+        'Grade' => $this->input->post('grade'),
+        'Description' => $this->input->post('description'),
+        'Class_level' => $this->input->post('class_level'),
+        'Intitial_deposit_date' => $this->input->post('intitial_deposit_date'),
+        'Tuition' => $this->input->post('tuition'),
+        'Balance' => $this->input->post('balance'),
+        'Course' => $this->input->post('courseID'),
+        'Advisor' => $this->input->post('advisorID'),
+      );
+
+      $Email = $basicdata['Email'];
+      $result = $this->apimodel->checkEmail($Email);
+      if($result){
+        // Pass to errorhandler: 'Email has been registered';
+        $this->errorhandler->errorhandler("40001"); 
+      }else{
+        //insert basic data to User table
+        $this->apimodel->registration_api($basicdata); 
+        //insert teacher data to Teacher table
+        $this->apimodel->registration_student($studentdata);
+
+        $params = array( 'code' => 200, 'message' => $data);
+        // Pass code: 200 and the array to response.php
+        $this->load->view('response',$params); 
+        // Redirect to login page                                                                      
+        redirect('api_v1/auth/login','refresh');                                                                      
+      }
+
+    }
+  }
+
+
   public function generateV(){
       $strs="QWERTYUIOPASDFGHJKLZXCVBNM1234567890qwertyuiopasdfghjklzxcvbnm";
       $name=substr(str_shuffle($strs),mt_rand(0,strlen($strs)-11),6);
