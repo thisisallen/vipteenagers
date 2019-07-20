@@ -283,6 +283,174 @@ class vipclass extends CI_Controller {
   }
 
 
+  //7.13 Alan
+    
+    public function syllabus(){
+        if($this->session->User_type == "Teacher")
+        {
+            if($this->classmodel->check_repeat($this->session->UserID) == "True"){
+                $result = $this->classmodel->syllabus_show($this->session->UserID);
+                $params = array( 'code' => 200, 'message' => $result);                                                // Pass code: 200 and the array to response.php
+                $this->load->view('response',$params);
+            }else{
+             //   $this->load->view('syllabusinitialize');
+                $this->syllabusinitialize();
+            }
+        }
+        else{
+            $this->errorhandler->errorhandler("40003");
+        }
+    }
+    
+    
+    public function syllabusinitialize(){
+        //To see if this user is a teacher.
+        if($this->session->User_type == "Teacher")
+        {
+            //To see if this teacher has already added courses in the database.
+            if($this->classmodel->check_repeat($this->session->UserID) == "False"){
+                $this->load->view('syllabusinitialize');
+            }
+            else{
+                $this->errorhandler->errorhandler("40003");
+            }
+        }
+        else{
+            $this->errorhandler->errorhandler("40003");
+        }
+    }
+    
+    public function syllabusinitializego(){
+        $oneW = $this->input->post('oneW');
+        $oneS = $this->input->post('oneS');
+        $twoW = $this->input->post('twoW');
+        $twoS = $this->input->post('twoS');
+        $threeW = $this->input->post('threeW');
+        $threeS = $this->input->post('threeS');
+        $fourW = $this->input->post('fourW');
+        $fourS = $this->input->post('fourS');
+        
+        $this->classmodel->syllabus_initialize($this->session->UserID,$oneW, $oneS, $twoW, $twoS,$threeW, $threeS,$fourW, $fourS);
+        
+        redirect('/api_v1/vipclass/syllabus','refresh');
+    }
+    
+    
+    
+    public function syllabusadd(){
+        if($this->session->User_type == "Teacher")
+        {
+            //To see if this teacher has already added courses in the database.
+            if($this->classmodel->check_repeat($this->session->UserID) == "True"){
+                $this->load->view('syllabusadd');
+            }
+            else{
+                //if not you have to initialize first.
+                $this->errorhandler->errorhandler("40003");
+            }
+        }
+        else{
+            $this->errorhandler->errorhandler("40003");
+        }
+    }
+    
+    
+    public function syllabusaddgo(){
+        $oneW = $this->input->post('oneW');
+        $oneS = $this->input->post('oneS');
+        $result = $this->classmodel->syllabus_add($this->session->UserID, $oneW, $oneS);
+        if($result == "False"){
+            $this->errorhandler->errorhandler("40003");
+        }else{
+            redirect('/api_v1/vipclass/syllabus','refresh');
+        }
+    }
+    
+    public function syllabusdelete(){
+        if($this->session->User_type == "Teacher")
+        {
+            //To see if this teacher has already added courses in the database.
+            if($this->classmodel->check_repeat($this->session->UserID) == "True"){
+                
+                if($this->classmodel->syllabus_gettotal($this->session->UserID) > 4){
+                    // Add a function to return the result as an array, then pass it into sd.
+                    $data['result'] = $this->classmodel->syllabus_show($this->session->UserID);
+                    $this->load->view('syllabusdelete',$data);
+                }else{
+                    $this->errorhandler->errorhandler("40003");
+                }
+            }
+            else{
+                $this->errorhandler->errorhandler("40003");
+            }
+        }
+        else{
+            $this->errorhandler->errorhandler("40003");
+        }
+    }
+    
+    public function syllabusdeletego(){
+        $oneW = $_GET['W'];
+        $oneS = $_GET['S'];
+        $week = $this->classmodel->syllabus_show($this->session->UserID);
+        $this->classmodel->syllabus_delete($this->session->UserID, $week, $oneW, $oneS);
+        redirect('/api_v1/vipclass/syllabus','refresh');
+        
+    }
+    public function syllabusupdate(){
+        if($this->session->User_type == "Teacher")
+        {
+            //To see if this teacher has already added courses in the database.
+            if($this->classmodel->check_repeat($this->session->UserID) == "True"){
+                
+                // Add a function to return the result as an array, then pass it into sd.
+                $data['result'] = $this->classmodel->syllabus_show($this->session->UserID);
+                $this->load->view('syllabusupdate',$data);
+                
+            }
+            else{
+                $this->errorhandler->errorhandler("40003");
+            }
+        }
+        else{
+            $this->errorhandler->errorhandler("40003");
+        }
+    }
+    
+    public function syllabusupdatego(){
+        
+        
+        if($_SERVER['REQUEST_METHOD'] == 'GET' AND $_GET['W'] AND $_GET['S']){
+            $this->session->oneW = $_GET['W'];
+            $this->session->oneS = $_GET['S'];
+            
+            $this->load->view('syllabusupdate_');
+        }else if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            //   echo $_SERVER['REQUEST_METHOD'];
+            $new_oneW = $this->input->post('new_oneW');
+            $new_oneS = $this->input->post('new_oneS');
+            if($this->session->oneW AND $this->session->oneS ){
+                
+                
+                $result = $this->classmodel->syllabus_update($this->session->UserID, $this->session->oneW, $this->session->oneS, $new_oneW, $new_oneS);
+                if($result == "False"){
+                    $this->errorhandler->errorhandler("40003");// Can not add the same record.
+                }
+                $this->session->oneS = "";
+                $this->session->oneW = "";
+                redirect('/api_v1/vipclass/syllabus','refresh');
+                
+            }else{
+                $this->errorhandler->errorhandler("40003");// Do not have the original record.
+            }
+        }else{
+            $this->errorhandler->errorhandler("40003");
+        }
+    }
+  
+
+
+
   
 }
 
